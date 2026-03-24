@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Serenity Hospital | Complete Blood Donation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        :root {
+            --primary: #c0392b;
+            --primary-light: #fadbd8;
+            --primary-dark: #a93226;
+            --secondary: #e67e22;
+            --gray-bg: #f8f9fa;
+            --border: #e0e0e0;
+            --text: #333;
+            --text-light: #666;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --hover-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            --bg-gradient-start: #fef2f2;
+            --bg-gradient-end: #fdedec;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --header-bg: #ffffff;
+            --bot-message-bg: #f0f0f0;
+            --section-bg: #ffffff;
+            --stat-bg: #fef2f2;
+            --badge-bg: #fef2f2;
+            --input-bg: #ffffff;
+            --hover-bg: #f8f9fa;
+        }
+
+        body.dark-theme {
+            --primary: #e74c3c;
+            --primary-dark: #c0392b;
+            --primary-light: #4a2c2c;
+            --gray-bg: #2c3e50;
+            --border: #4a627a;
+            --text: #ecf0f1;
+            --text-light: #bdc3c7;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --bg-gradient-start: #1e272e;
+            --bg-gradient-end: #2c3e50;
+            --card-bg: #34495e;
+            --text-color: #ecf0f1;
+            --header-bg: #2c3e50;
+            --bot-message-bg: #2c3e50;
+            --section-bg: #2c3e50;
+            --stat-bg: #3a546d;
+            --badge-bg: #3a546d;
+            --input-bg: #2c3e50;
+            --hover-bg: #3a546d;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            padding: 1rem 2rem;
+            border-radius: 60px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 1rem;
+            backdrop-filter: blur(10px);
+            background: var(--card-bg);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo-icon { font-size: 2rem; }
+        .logo-text { font-size: 1.5rem; font-weight: 600; color: var(--primary); }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .theme-toggle, .sos-btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .theme-toggle {
+            background: var(--gray-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border);
+        }
+        
+        .sos-btn {
+            background: var(--danger);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .theme-toggle:hover, .sos-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        .nav {
+            background: var(--card-bg);
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 5rem;
+            z-index: 99;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .nav a:hover, .nav a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .hero {
+            background: var(--card-bg);
+            border-radius: 40px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .hero h1 { font-size: 2.5rem; color: var(--text-color); margin-bottom: 1rem; }
+        .hero h1 span { color: var(--primary); }
+        .hero p { color: var(--text-light); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        
+        .hero-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: var(--stat-bg);
+            padding: 1rem;
+            border-radius: 20px;
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+            transition: transform 0.3s;
+        }
+        
+        .stat:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.85rem; color: var(--text-light); }
+        
+        .hero-image {
+            background: var(--stat-bg);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .section-info {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .hospitals-grid, .camps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .hospital-card, .camp-card, .blood-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+        }
+        
+        .hospital-card:hover, .camp-card:hover, .blood-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .hospital-name, .camp-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .hospital-detail, .camp-detail {
+            color: var(--text-light);
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: var(--badge-bg);
+            color: var(--primary);
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            height: 8px;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .btn-primary, .btn-secondary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-secondary {
+            background: var(--gray-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: scale(1.02);
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .form-container, .contact-section, .eligibility-checker {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 60px;
+            font-size: 1rem;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+        
+        .form-group textarea {
+            border-radius: 25px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--stat-bg);
+            border-radius: 60px;
+            transition: transform 0.3s;
+        }
+        
+        .info-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .blood-groups {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        
+        .blood-group-item {
+            background: var(--stat-bg);
+            border-radius: 12px;
+            padding: 0.8rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .blood-group-item:hover {
+            transform: scale(1.05);
+            background: var(--primary);
+        }
+        
+        .blood-group-item:hover .blood-group-type,
+        .blood-group-item:hover .blood-group-units {
+            color: white;
+        }
+        
+        .blood-group-type {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+        
+        .blood-group-units {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.8rem 0;
+            padding: 0.5rem;
+            border-radius: 12px;
+            transition: background 0.3s;
+        }
+        
+        .check-item:hover {
+            background: var(--stat-bg);
+        }
+        
+        .check-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .alert {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            border-radius: 60px;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            z-index: 2000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s;
+            border-left: 5px solid var(--success);
+        }
+        
+        .alert.show { display: flex; }
+        .alert.success { border-left-color: var(--success); }
+        .alert.error { border-left-color: var(--danger); }
+        .alert.warning { border-left-color: var(--warning); }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            animation: modalSlideIn 0.3s;
+        }
+        
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .sos-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--stat-bg);
+            padding: 1rem;
+            border-radius: 60px;
+            margin: 1rem 0;
+            color: var(--danger);
+        }
+        
+        .footer {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .hero { grid-template-columns: 1fr; }
+            .blood-groups { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+        
+        .chatbot {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 320px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .chatbot.open { display: block; }
+        
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .message {
+            padding: 0.6rem 1rem;
+            border-radius: 18px;
+            max-width: 85%;
+            word-wrap: break-word;
+            animation: messageIn 0.3s;
+        }
+        
+        @keyframes messageIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .user-message {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .bot-message {
+            background: var(--bot-message-bg);
+            color: var(--text-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            gap: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 60px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        
+        .chat-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .chat-input button:hover {
+            transform: scale(1.05);
+        }
+        
+        .chat-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            z-index: 999;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .chat-toggle:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Additional styling for better visual appeal */
+        hr {
+            border-color: var(--border);
+            margin: 1rem 0;
+        }
+        
+        .hospital-btn, .camp-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .hospital-btn:hover, .camp-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">🏥</span>
+                <span class="logo-text">Serenity Health</span>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+                <button class="sos-btn" onclick="openSOSModal()">🚨 SOS Emergency</button>
+            </div>
+        </div>
+
+        <nav class="nav" id="navbar">
+            <a onclick="scrollToSection('home')">🏠 Home</a>
+            <a onclick="scrollToSection('hospitals')">🏥 Hospitals</a>
+            <a onclick="scrollToSection('camps')">📅 Camps</a>
+            <a onclick="scrollToSection('blood-stock')">🩸 Blood Stock</a>
+            <a onclick="scrollToSection('donor-form')">📋 Donor Form</a>
+            <a onclick="scrollToSection('request-blood')">🆘 Request Blood</a>
+            <a onclick="scrollToSection('eligibility')">✅ Eligibility</a>
+            <a onclick="scrollToSection('contact')">📞 Contact</a>
+            <a onclick="scrollToSection('inquiry')">✉️ Inquiry</a>
+        </nav>
+
+        <section id="home" class="hero">
+            <div>
+                <h1>Complete Blood <span>Care Network</span></h1>
+                <p>NYC's largest integrated blood service · Real-time updates · 24/7 emergency support</p>
+                <div class="hero-stats" id="heroStats">
+                    <div class="stat"><div class="stat-number" id="statHospitals">0</div><div class="stat-label">Hospitals</div></div>
+                    <div class="stat"><div class="stat-number" id="statUnits">0</div><div class="stat-label">Blood Units</div></div>
+                    <div class="stat"><div class="stat-number" id="statDonors">0</div><div class="stat-label">Donors</div></div>
+                    <div class="stat"><div class="stat-number" id="statCamps">0</div><div class="stat-label">Active Camps</div></div>
+                </div>
+            </div>
+            <div class="hero-image">🩸</div>
+        </section>
+
+        <section id="hospitals"><h2 class="section-title">🏥 Partner Hospitals</h2><div class="hospitals-grid" id="hospitalsContainer"></div></section>
+        <section id="camps"><h2 class="section-title">📅 Upcoming Blood Camps</h2><div class="camps-grid" id="campsContainer"></div></section>
+        <section id="blood-stock"><h2 class="section-title">🩸 Blood Stock Inventory</h2><div id="bloodStockContainer"></div></section>
+        
+        <section id="donor-form"><h2 class="section-title">📋 Donor Registration</h2><div class="form-container"><form id="donorForm" onsubmit="return submitDonor(event)"><div class="form-group"><input type="text" id="donorName" placeholder="Full Name *" required></div><div class="form-group"><input type="email" id="donorEmail" placeholder="Email Address *" required></div><div class="form-group"><input type="tel" id="donorPhone" placeholder="Mobile Number *" required pattern="[0-9]{10}"></div><div class="form-group"><input type="number" id="donorAge" placeholder="Age (18-60)" min="18" max="60" required></div><div class="form-group"><select id="donorBlood" required><option value="">Select Blood Group</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div><div class="form-group"><input type="text" id="donorAddress" placeholder="Address"></div><button type="submit" class="btn-primary">✅ Register as Donor</button></form></div></section>
+        
+        <section id="request-blood"><h2 class="section-title">🆘 Request Blood</h2><div class="form-container"><form id="requestForm" onsubmit="return submitRequest(event)"><div class="form-group"><input type="text" id="reqPatient" placeholder="Patient Name *" required></div><div class="form-group"><input type="email" id="reqEmail" placeholder="Your Email *" required></div><div class="form-group"><input type="tel" id="reqPhone" placeholder="Contact Number *" required pattern="[0-9]{10}"></div><div class="form-group"><select id="reqBloodGroup" required><option value="">Select Blood Group</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div><div class="form-group"><select id="reqHospital" required><option value="">Select Hospital</option></select></div><div class="form-group"><input type="number" id="reqUnits" placeholder="Units Needed (1-5)" min="1" max="5" required></div><button type="submit" class="btn-primary">📢 Submit Request</button></form></div></section>
+        
+        <section id="eligibility"><h2 class="section-title">✅ Donor Eligibility Check</h2><div class="eligibility-checker"><div class="check-item"><input type="checkbox" id="eligAge"><label>Age between 18-60 years</label></div><div class="check-item"><input type="checkbox" id="eligWeight"><label>Weight ≥ 50 kg (110 lbs)</label></div><div class="check-item"><input type="checkbox" id="eligHealth"><label>No cold/flu/fever in last 7 days</label></div><div class="check-item"><input type="checkbox" id="eligSleep"><label>At least 6 hours of sleep last night</label></div><div class="check-item"><input type="checkbox" id="eligMeds"><label>No antibiotics or blood thinners (7 days)</label></div><button class="btn-primary" onclick="checkEligibility()">Check Eligibility</button><p id="eligibilityResult" style="margin-top:1rem; text-align:center; font-weight:600;"></p></div></section>
+        
+        <section id="contact"><h2 class="section-title">📞 Contact Us</h2><div class="contact-section"><div class="contact-info"><div class="info-item"><span>📧</span> blood@serenityhealth.com</div><div class="info-item"><span>📞</span> +1 (212) 555-0100</div><div class="info-item"><span>📍</span> 123 Medical Ave, New York, NY</div><div class="info-item"><span>🚑</span> Emergency: 108 / 911</div><div class="info-item"><span>🕒</span> 24/7 Helpline Available</div></div></div></section>
+        
+        <section id="inquiry"><h2 class="section-title">✉️ Send an Inquiry</h2><div class="form-container"><form id="inquiryForm" onsubmit="return submitInquiry(event)"><div class="form-group"><input type="text" id="inqName" placeholder="Your Full Name *" required></div><div class="form-group"><input type="email" id="inqEmail" placeholder="Email Address *" required></div><div class="form-group"><input type="tel" id="inqPhone" placeholder="Contact Number"></div><div class="form-group"><select id="inqSubject" required><option value="">-- Select Subject --</option><option>Blood Donation Query</option><option>Camp Registration</option><option>Emergency Support</option><option>General Inquiry</option></select></div><div class="form-group"><textarea id="inqMessage" rows="4" placeholder="Your message / inquiry *" required></textarea></div><button type="submit" class="btn-primary">📨 Submit Inquiry</button></form></div></section>
+        
+        <footer class="footer">© 2025 Serenity Hospital Network · Every drop counts · Emergency: 108</footer>
+    </div>
+
+    <div class="modal" id="sosModal"><div class="modal-content"><span style="font-size:3rem;">🚨</span><h2 style="color:var(--danger);">Emergency Assistance</h2><div class="sos-number">📞 108 (Ambulance)</div><div class="sos-number">📞 911 (Emergency)</div><button class="btn-primary" onclick="callNumber('108')">Call 108 Now</button><button class="btn-secondary" style="margin-top:0.5rem;" onclick="callNumber('911')">Call 911</button><button class="btn-secondary" style="margin-top:1rem;" onclick="closeSOSModal()">Close</button></div></div>
+    
+    <div class="alert" id="customAlert"><span id="alertIcon"></span><span id="alertMessage"></span></div>
+    
+    <button class="chat-toggle" onclick="toggleChat()">💬 Assistant</button>
+    <div class="chatbot" id="chatbot"><div class="chat-header"><span>🤖 Serenity Assistant</span><button onclick="toggleChat()">✕</button></div><div class="chat-messages" id="chatMessages"><div class="message bot-message">👋 Hello! Ask me about donation, eligibility, camps, or blood stock.</div></div><div class="chat-input"><input type="text" id="chatInput" placeholder="Type your question..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Send</button></div></div>
+
+    <script>
+        // ==================== DATA ====================
+        const hospitals = [
+            { name: "Serenity Main Hospital", trauma: "Level 1 Trauma", distance: "2.5 miles", city: "Manhattan", phone: "(212) 555-0100", emergency: "24/7", services: ["Emergency", "Blood Bank", "ICU"] },
+            { name: "Brooklyn Medical Center", trauma: "Level 2 Trauma", distance: "4.8 miles", city: "Brooklyn", phone: "(718) 555-0200", services: ["Emergency", "Blood Bank", "Maternity"] },
+            { name: "Queens Community Hospital", trauma: "General", distance: "6.2 miles", city: "Queens", phone: "(718) 555-0300", services: ["Emergency", "Blood Bank", "Pediatrics"] },
+            { name: "St. Mary's Blood Center", trauma: "Specialty Center", distance: "3.1 miles", city: "Manhattan", phone: "(212) 555-0400", services: ["Blood Donation", "Platelet", "Plasma"] },
+            { name: "Harlem Health Network", trauma: "Community", distance: "5.0 miles", city: "Harlem", phone: "(212) 555-0500", services: ["Emergency", "Blood Bank", "Primary Care"] },
+            { name: "Staten Island Hospital", trauma: "Level 3", distance: "8.5 miles", city: "Staten Island", phone: "(718) 555-0600", services: ["Emergency", "Blood Bank", "Surgery"] }
+        ];
+        
+        const camps = [
+            { title: "Summer Blood Drive 2024", organizer: "American Red Cross", location: "Manhattan Community Center", date: "July 15-16, 2024", registered: 145, total: 200, benefits: "Free T-shirt & Health Checkup" },
+            { title: "Corporate Blood Donation Camp", organizer: "Tech Corp NY", location: "Tech Corp Tower", date: "July 20, 2024", registered: 89, total: 150, benefits: "Paid Day Off & Lunch" },
+            { title: "Weekend Blood Camp", organizer: "Serenity Foundation", location: "Serenity Main Hospital", date: "July 27-28, 2024", registered: 210, total: 300, benefits: "Free Snacks & Certificate" },
+            { title: "24-Hour Emergency Camp", organizer: "NY Blood Services", location: "Brooklyn Medical Center", date: "Aug 3-4, 2024", registered: 67, total: 400, benefits: "Emergency Response Team" },
+            { title: "College Blood Drive", organizer: "NYU Health", location: "NYU Student Center", date: "Aug 10-11, 2024", registered: 112, total: 250, benefits: "T-shirt & Pizza" }
+        ];
+        
+        const bloodStock = {
+            "Serenity Main Hospital": { "A+": 45, "A-": 12, "B+": 38, "B-": 8, "O+": 52, "O-": 25, "AB+": 15, "AB-": 6 },
+            "Brooklyn Medical Center": { "A+": 32, "A-": 10, "B+": 28, "B-": 7, "O+": 48, "O-": 20, "AB+": 12, "AB-": 5 },
+            "Queens Community Hospital": { "A+": 28, "A-": 8, "B+": 25, "B-": 6, "O+": 40, "O-": 15, "AB+": 10, "AB-": 4 },
+            "St. Mary's Blood Center": { "A+": 55, "A-": 18, "B+": 42, "B-": 12, "O+": 68, "O-": 32, "AB+": 20, "AB-": 10 }
+        };
+        
+        let donors = JSON.parse(localStorage.getItem('serenityDonors') || '[]');
+        let requests = JSON.parse(localStorage.getItem('serenityRequests') || '[]');
+        let inquiries = JSON.parse(localStorage.getItem('serenityInquiries') || '[]');
+        
+        function updateStats() {
+            const totalUnits = Object.values(bloodStock).reduce((sum, hospital) => sum + Object.values(hospital).reduce((a,b) => a+b, 0), 0);
+            document.getElementById('statHospitals').textContent = hospitals.length;
+            document.getElementById('statUnits').textContent = totalUnits;
+            document.getElementById('statDonors').textContent = donors.length;
+            document.getElementById('statCamps').textContent = camps.length;
+        }
+        
+        function renderHospitals() {
+            let html = '';
+            hospitals.forEach(h => {
+                html += `<div class="hospital-card"><span class="badge">🏥 ${h.trauma}</span><div class="hospital-name">${h.name}</div><div class="hospital-detail">📍 ${h.city} · ${h.distance}</div><div class="hospital-detail">📞 ${h.phone}</div><div class="hospital-detail">🚑 Emergency: ${h.emergency || '24/7'}</div><div class="hospital-detail">🩺 ${h.services.slice(0,3).join(', ')}</div><button class="hospital-btn" style="margin-top:1rem;" onclick="showAlert('Contact ${h.name} at ${h.phone}', 'success')">Contact Hospital</button></div>`;
+            });
+            document.getElementById('hospitalsContainer').innerHTML = html;
+        }
+        
+        function renderCamps() {
+            let html = '';
+            camps.forEach(c => {
+                const percent = (c.registered / c.total) * 100;
+                html += `<div class="camp-card"><span class="badge">📅 Blood Camp</span><div class="camp-title">${c.title}</div><div class="camp-detail">🏢 ${c.organizer}</div><div class="camp-detail">📍 ${c.location}</div><div class="camp-detail">📅 ${c.date}</div><div class="camp-detail">🎁 ${c.benefits}</div><div class="progress-bar"><div class="progress-fill" style="width: ${percent}%"></div></div><div class="camp-detail">✅ ${c.registered}/${c.total} registered</div><button class="camp-btn" style="margin-top:0.5rem;" onclick="registerForCamp('${c.title}')">Register for Camp</button></div>`;
+            });
+            document.getElementById('campsContainer').innerHTML = html;
+        }
+        
+        function renderBloodStock() {
+            let html = '<div class="blood-stock-grid" style="display:grid; gap:1.5rem;">';
+            for (const [hospital, groups] of Object.entries(bloodStock)) {
+                html += `<div class="blood-card"><div class="hospital-name">🏥 ${hospital}</div><div class="blood-groups">`;
+                const order = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+                order.forEach(bg => {
+                    const units = groups[bg] || 0;
+                    html += `<div class="blood-group-item"><div class="blood-group-type">${bg}</div><div class="blood-group-units">${units} units</div></div>`;
+                });
+                html += `</div></div>`;
+            }
+            html += '</div>';
+            document.getElementById('bloodStockContainer').innerHTML = html;
+        }
+        
+        function populateHospitalDropdown() {
+            const select = document.getElementById('reqHospital');
+            select.innerHTML = '<option value="">Select Hospital</option>';
+            hospitals.forEach(h => { select.innerHTML += `<option value="${h.name}">${h.name}</option>`; });
+        }
+        
+        function submitDonor(e) {
+            e.preventDefault();
+            const donor = {
+                id: Date.now(),
+                name: document.getElementById('donorName').value,
+                email: document.getElementById('donorEmail').value,
+                phone: document.getElementById('donorPhone').value,
+                age: document.getElementById('donorAge').value,
+                blood_group: document.getElementById('donorBlood').value,
+                address: document.getElementById('donorAddress').value,
+                date: new Date().toISOString()
+            };
+            if (!donor.name || !donor.email || !donor.phone || !donor.age || !donor.blood_group) { showAlert('Please fill all required fields', 'error'); return false; }
+            if (donor.phone.length !== 10) { showAlert('Enter valid 10-digit mobile number', 'error'); return false; }
+            if (donor.age < 18 || donor.age > 60) { showAlert('Age must be 18-60 years', 'error'); return false; }
+            donors.push(donor);
+            localStorage.setItem('serenityDonors', JSON.stringify(donors));
+            showAlert(`✅ Thank you ${donor.name}! You're now a registered donor.`, 'success');
+            document.getElementById('donorForm').reset();
+            updateStats();
+            return false;
+        }
+        
+        function submitRequest(e) {
+            e.preventDefault();
+            const req = {
+                id: Date.now(),
+                patient: document.getElementById('reqPatient').value,
+                email: document.getElementById('reqEmail').value,
+                phone: document.getElementById('reqPhone').value,
+                blood_group: document.getElementById('reqBloodGroup').value,
+                hospital: document.getElementById('reqHospital').value,
+                units: parseInt(document.getElementById('reqUnits').value),
+                status: 'pending',
+                date: new Date().toISOString()
+            };
+            if (!req.patient || !req.email || !req.phone || !req.blood_group || !req.hospital) { showAlert('Please fill all fields', 'error'); return false; }
+            if (req.phone.length !== 10) { showAlert('Valid 10-digit number required', 'error'); return false; }
+            requests.push(req);
+            localStorage.setItem('serenityRequests', JSON.stringify(requests));
+            showAlert(`✅ Blood request submitted! ${req.hospital} will contact you soon.`, 'success');
+            document.getElementById('requestForm').reset();
+            return false;
+        }
+        
+        function submitInquiry(e) {
+            e.preventDefault();
+            const inquiry = {
+                id: Date.now(),
+                name: document.getElementById('inqName').value,
+                email: document.getElementById('inqEmail').value,
+                phone: document.getElementById('inqPhone').value,
+                subject: document.getElementById('inqSubject').value,
+                message: document.getElementById('inqMessage').value,
+                date: new Date().toISOString()
+            };
+            if (!inquiry.name || !inquiry.email || !inquiry.subject || !inquiry.message) { showAlert('Please fill all required fields', 'error'); return false; }
+            inquiries.push(inquiry);
+            localStorage.setItem('serenityInquiries', JSON.stringify(inquiries));
+            showAlert(`📩 Thank you ${inquiry.name}! We'll respond within 24 hours.`, 'success');
+            document.getElementById('inquiryForm').reset();
+            return false;
+        }
+        
+        function checkEligibility() {
+            const age = document.getElementById('eligAge').checked;
+            const weight = document.getElementById('eligWeight').checked;
+            const health = document.getElementById('eligHealth').checked;
+            const sleep = document.getElementById('eligSleep').checked;
+            const meds = document.getElementById('eligMeds').checked;
+            const result = document.getElementById('eligibilityResult');
+            if (age && weight && health && sleep && meds) {
+                result.innerHTML = '✅ Congratulations! You are eligible to donate blood.';
+                result.style.color = 'var(--success)';
+                showAlert('You are eligible to donate blood!', 'success');
+            } else {
+                result.innerHTML = '❌ You are not eligible yet. Please review the criteria above.';
+                result.style.color = 'var(--danger)';
+                showAlert('Not eligible. Please check all criteria.', 'warning');
+            }
+        }
+        
+        function registerForCamp(campName) {
+            showAlert(`📝 Registration opened for ${campName}. Please visit the Donor Form to complete registration.`, 'success');
+        }
+        
+        function openSOSModal() { document.getElementById('sosModal').classList.add('active'); }
+        function closeSOSModal() { document.getElementById('sosModal').classList.remove('active'); }
+        function callNumber(num) {
+            window.location.href = `tel:${num}`;
+            showAlert(`Dialing ${num} for emergency assistance...`, 'warning');
+            setTimeout(closeSOSModal, 500);
+        }
+        
+        function showAlert(msg, type) {
+            const alert = document.getElementById('customAlert');
+            const icon = document.getElementById('alertIcon');
+            const msgEl = document.getElementById('alertMessage');
+            alert.className = `alert ${type} show`;
+            icon.innerHTML = type === 'success' ? '✅' : (type === 'error' ? '❌' : '⚠️');
+            msgEl.innerText = msg;
+            setTimeout(() => alert.classList.remove('show'), 3500);
+        }
+        
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const btn = document.querySelector('.theme-toggle');
+            btn.innerHTML = document.body.classList.contains('dark-theme') ? '☀️ Light Mode' : '🌙 Dark Mode';
+            localStorage.setItem('serenityTheme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        }
+        
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+        }
+        
+        function toggleChat() { document.getElementById('chatbot').classList.toggle('open'); }
+        
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            const container = document.getElementById('chatMessages');
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-message';
+            userDiv.textContent = msg;
+            container.appendChild(userDiv);
+            input.value = '';
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'message bot-message';
+                const lower = msg.toLowerCase();
+                if (lower.includes('eligible')) botDiv.textContent = '✅ Donors must be 18-60 yrs, ≥50kg, healthy. Use Eligibility Checker above!';
+                else if (lower.includes('camp')) botDiv.textContent = '📅 Check Camps section for upcoming drives near you!';
+                else if (lower.includes('blood')) botDiv.textContent = '🩸 Real-time blood stock available in Blood Stock section.';
+                else if (lower.includes('donor')) botDiv.textContent = '📋 Register using Donor Form to save lives!';
+                else if (lower.includes('sos') || lower.includes('emergency')) botDiv.textContent = '🚨 Click red SOS button or call 108 immediately!';
+                else botDiv.textContent = 'I can help with hospitals, camps, blood stock, eligibility, donation, or inquiries!';
+                container.appendChild(botDiv);
+                container.scrollTop = container.scrollHeight;
+            }, 300);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('serenityTheme');
+            if (savedTheme === 'dark') document.body.classList.add('dark-theme');
+            renderHospitals();
+            renderCamps();
+            renderBloodStock();
+            populateHospitalDropdown();
+            updateStats();
+            document.querySelectorAll('.nav a')[0].classList.add('active');
+        });
+    </script>
+</body>
+</html>
